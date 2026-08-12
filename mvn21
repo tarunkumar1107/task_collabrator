@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+# Always run Maven with Java 21 for this project.
+set -euo pipefail
+
+JAVA21_HOME="${JAVA21_HOME:-/opt/homebrew/opt/openjdk@21/libexec/openjdk.jdk/Contents/Home}"
+
+if [[ ! -x "$JAVA21_HOME/bin/java" ]]; then
+  echo "Java 21 not found at: $JAVA21_HOME" >&2
+  echo "Install with: brew install openjdk@21" >&2
+  exit 1
+fi
+
+export JAVA_HOME="$JAVA21_HOME"
+export PATH="$JAVA_HOME/bin:$PATH"
+
+exec mvn "$@"
