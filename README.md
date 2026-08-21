@@ -11,6 +11,7 @@ Spring Boot backend for collaborative task tracking — users, projects, assignm
 - Filter / search / sort tasks
 - Task comments and file attachments
 - Consistent REST validation and error responses
+- AI-drafted task descriptions (OpenAI-backed, suggestion-only endpoint)
 
 ## Tech stack
 
@@ -225,6 +226,7 @@ User (assignee) ──▶ Task
 | Projects | `POST/GET /api/projects`, `GET /api/projects/{id}`, members invite/list |
 | Tasks | project tasks, `/api/tasks/mine`, CRUD, status, assignee |
 | Collab | `/api/tasks/{id}/comments`, `/attachments`, download |
+| AI | `POST /api/tasks/{id}/generate-description` |
 
 Full request/response docs: [docs/API.md](docs/API.md)  
 Interactive docs: Swagger UI at `/swagger-ui.html`  
@@ -242,6 +244,31 @@ Module notes: [docs/MODULES.md](docs/MODULES.md)
 | `app.jwt.secret` | dev secret | Change for any shared/deployed env |
 | `app.jwt.expiration-ms` | `86400000` | 24 hours |
 | `app.upload-dir` | `uploads` | Local attachment storage |
+| `app.llm.api-key` | `dummy-llm-api-key` | OpenAI API key. Placeholder value runs the AI endpoint in local stub mode (see below) |
+| `app.llm.api-url` | `https://api.openai.com/v1/chat/completions` | Chat Completions endpoint |
+| `app.llm.model` | `gpt-4o-mini` | OpenAI model used for description drafts |
+| `app.llm.timeout-ms` | `15000` | Connect/read timeout for the AI call |
+
+## AI task description generation
+
+`POST /api/tasks/{id}/generate-description` drafts a description from the task's title (and any
+existing notes) and returns it — **it does not modify the task**. Accept the suggestion by calling
+`PUT /api/tasks/{id}` yourself with the returned text.
+
+```bash
+curl -s -X POST http://localhost:8080/api/tasks/1/generate-description \
+  -H "Authorization: Bearer $TOKEN"
+# => { "taskId": 1, "title": "Draft wireframes", "generatedDescription": "...", "source": "stub" }
+```
+
+- **No key configured yet:** `app.llm.api-key` defaults to the placeholder `dummy-llm-api-key`, so out
+  of the box the endpoint returns a locally templated draft and `"source": "stub"` — no network call,
+  no error.
+- **Once you have a real OpenAI key:** set `APP_LLM_API_KEY` (env var or `docker-compose.yml`) to call
+  the real API; responses then come back with `"source": "openai"`.
+- Implementation: [`LlmClient`](src/main/java/com/taskmaster/service/LlmClient.java) /
+  [`OpenAiLlmClient`](src/main/java/com/taskmaster/service/OpenAiLlmClient.java) (swap in a different
+  implementation to change provider), [`AiDescriptionService`](src/main/java/com/taskmaster/service/AiDescriptionService.java).
 
 ## Design decisions
 

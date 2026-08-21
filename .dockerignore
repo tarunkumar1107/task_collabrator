@@ -1,0 +1,14 @@
+target/
+.idea/
+.vscode/
+.git/
+.gitignore
+uploads/
+*.md
+docs/
+mvn21
+.java-version
+.sdkmanrc
+.DS_Store
+**/*Test.java
+**/test/

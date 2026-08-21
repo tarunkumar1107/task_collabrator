@@ -1,12 +1,14 @@
 package com.taskmaster.controller;
 
 import com.taskmaster.domain.TaskStatus;
+import com.taskmaster.dto.AiDtos.GenerateDescriptionResponse;
 import com.taskmaster.dto.TaskDtos.AssignTaskRequest;
 import com.taskmaster.dto.TaskDtos.CreateTaskRequest;
 import com.taskmaster.dto.TaskDtos.TaskResponse;
 import com.taskmaster.dto.TaskDtos.UpdateStatusRequest;
 import com.taskmaster.dto.TaskDtos.UpdateTaskRequest;
 import com.taskmaster.security.SecurityUtils;
+import com.taskmaster.service.AiDescriptionService;
 import com.taskmaster.service.TaskService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -40,9 +42,11 @@ import java.util.List;
 public class TaskController {
 
     private final TaskService taskService;
+    private final AiDescriptionService aiDescriptionService;
 
-    public TaskController(TaskService taskService) {
+    public TaskController(TaskService taskService, AiDescriptionService aiDescriptionService) {
         this.taskService = taskService;
+        this.aiDescriptionService = aiDescriptionService;
     }
 
     @PostMapping("/projects/{projectId}/tasks")
@@ -151,5 +155,31 @@ public class TaskController {
     @Operation(summary = "Delete task", description = "Permanently deletes a task.")
     public void delete(@PathVariable Long id) {
         taskService.deleteTask(SecurityUtils.currentUser(), id);
+    }
+
+    @PostMapping("/tasks/{id}/generate-description")
+    @Operation(
+            summary = "AI-generate task description",
+            description = """
+                    Drafts a task description from the task's title (and any existing notes) using an AI \
+                    provider. Returns a **suggestion only** — the task is not modified; call \
+                    `PUT /api/tasks/{id}` with the accepted text to save it.
+
+                    Until `APP_LLM_API_KEY` is set to a real key, this returns a locally templated draft \
+                    (`source: "stub"`) instead of calling the AI provider, so the endpoint works out of the box.
+                    """
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Description drafted",
+                    content = @Content(schema = @Schema(implementation = GenerateDescriptionResponse.class))),
+            @ApiResponse(responseCode = "401", ref = "#/components/responses/UnauthorizedError"),
+            @ApiResponse(responseCode = "403", ref = "#/components/responses/ForbiddenError"),
+            @ApiResponse(responseCode = "404", description = "Task not found"),
+            @ApiResponse(responseCode = "502", description = "AI provider call failed")
+    })
+    public GenerateDescriptionResponse generateDescription(
+            @Parameter(description = "Task id", example = "1") @PathVariable Long id
+    ) {
+        return aiDescriptionService.generateDescription(SecurityUtils.currentUser(), id);
     }
 }

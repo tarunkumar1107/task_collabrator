@@ -1,0 +1,20 @@
+target/
+uploads/
+*.log
+.DS_Store
+
+# IntelliJ — keep JDK/compiler config, ignore personal IDE junk
+.idea/*
+!.idea/misc.xml
+!.idea/compiler.xml
+!.idea/vcs.xml
+*.iml
+
+# Eclipse
+.classpath
+.project
+.settings/
+
+# VS Code / Cursor — keep shared workspace Java 21 settings
+.vscode/*
+!.vscode/settings.json
