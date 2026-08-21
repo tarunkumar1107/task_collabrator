@@ -30,6 +30,13 @@ app:
     secret: ${APP_JWT_SECRET:TaskMasterDevSecretKeyThatIsLongEnoughForHS256AlgorithmSecurity}
     expiration-ms: ${APP_JWT_EXPIRATION_MS:86400000}
   upload-dir: ${APP_UPLOAD_DIR:uploads}
+  llm:
+    # Placeholder key — the AI description endpoint runs in local stub mode until this is
+    # replaced with a real OpenAI key (see README > AI task description generation).
+    api-key: ${APP_LLM_API_KEY:dummy-llm-api-key}
+    api-url: ${APP_LLM_API_URL:https://api.openai.com/v1/chat/completions}
+    model: ${APP_LLM_MODEL:gpt-4o-mini}
+    timeout-ms: ${APP_LLM_TIMEOUT_MS:15000}
 
 logging:
   level:

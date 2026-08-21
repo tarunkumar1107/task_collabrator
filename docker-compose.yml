@@ -9,6 +9,8 @@ services:
       APP_JWT_SECRET: "TaskMasterDockerSecretKeyThatIsLongEnoughForHS256"
       APP_JWT_EXPIRATION_MS: "86400000"
       APP_UPLOAD_DIR: "/app/uploads"
+      # AI task-description endpoint runs in local stub mode until this is a real OpenAI key.
+      APP_LLM_API_KEY: "dummy-llm-api-key"
       JAVA_OPTS: "-XX:+UseContainerSupport -XX:MaxRAMPercentage=75.0"
     volumes:
       - taskmaster_uploads:/app/uploads

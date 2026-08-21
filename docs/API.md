@@ -191,6 +191,27 @@ Update body:
 { "assigneeId": 2 }
 ```
 
+### AI-generate description
+
+`POST /api/tasks/{id}/generate-description`
+
+Drafts a description from the task's title and any existing notes. **Suggestion only** — the task
+is not modified; call `PUT /api/tasks/{id}` with the accepted text to save it.
+
+**200**
+
+```json
+{
+  "taskId": 1,
+  "title": "Draft wireframes",
+  "generatedDescription": "Complete \"Draft wireframes\": outline the steps needed, note any dependencies or blockers, and define what \"done\" looks like.",
+  "source": "stub"
+}
+```
+
+`source` is `"stub"` (a locally templated draft, no network call) until `APP_LLM_API_KEY` is set to
+a real OpenAI key, after which it's `"openai"`. **502** if the AI provider call fails once configured.
+
 ---
 
 ## Comments
