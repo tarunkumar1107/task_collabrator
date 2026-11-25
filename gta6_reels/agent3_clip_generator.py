@@ -22,7 +22,7 @@ def cut_clip(cfg: dict, stream: dict, start: float, end: float, out: Path) -> Pa
              "-c:v", "libx264", "-preset", "veryfast", "-crf", "16", "-c:a", "aac", "-b:a", "192k", str(out)])
         return out
     log.info("downloading %s %s-%s", stream["video_id"], fmt_ts(start), fmt_ts(end))
-    run(["yt-dlp", "--no-warnings", "-f", "bv*[height<=1080][ext=mp4]+ba[ext=m4a]/bv*[height<=1080]+ba/b",
+    run(["yt-dlp", "--no-warnings", *cfg["search"].get("ytdlp_args", []), "-f", "bv*[height<=1080][ext=mp4]+ba[ext=m4a]/bv*[height<=1080]+ba/b",
          "--merge-output-format", "mp4", "--download-sections", f"*{start:.2f}-{end:.2f}",
          "--force-keyframes-at-cuts", "-o", str(out), stream["url"]], timeout=3600)
     return out

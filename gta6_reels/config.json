@@ -5,33 +5,80 @@
   "score_threshold": 90,
   "max_streams_per_run": 2,
   "max_qa_attempts": 3,
-
   "search": {
-    "keywords": ["GTA 6", "GTA VI", "GTA6"],
-    "extra_queries": ["GTA 6 live hindi", "GTA 6 live india"],
+    "keywords": [
+      "GTA 6",
+      "GTA VI",
+      "GTA6"
+    ],
+    "extra_queries": [
+      "Techno Gamerz GTA 6",
+      "GTA 6 live hindi",
+      "GTA 6 live india"
+    ],
     "lookback_videos_per_channel": 8,
     "min_duration_minutes": 20,
     "max_duration_hours": 8,
-    "youtube_api_key_env": "YOUTUBE_API_KEY"
+    "youtube_api_key_env": "YOUTUBE_API_KEY",
+    "ytdlp_args": []
   },
-
   "streamers": [
-    {"name": "CarryMinati",     "channel": "https://www.youtube.com/@CarryisLive",    "priority": 1, "permission": "none", "ig_handle": "carryminati"},
-    {"name": "Techno Gamerz",   "channel": "https://www.youtube.com/@TechnoGamerzOfficial", "priority": 2, "permission": "none", "ig_handle": "ujjwal_technogamerz"},
-    {"name": "Triggered Insaan","channel": "https://www.youtube.com/@LiveInsaan",      "priority": 3, "permission": "none", "ig_handle": "triggeredinsaan"},
-    {"name": "Mythpat",         "channel": "https://www.youtube.com/@MythpatLive",    "priority": 4, "permission": "none", "ig_handle": "mythpat"},
-    {"name": "Scout",           "channel": "https://www.youtube.com/@ScoutOP",        "priority": 5, "permission": "none", "ig_handle": "scoutop"},
-    {"name": "Mortal",          "channel": "https://www.youtube.com/@MortaL",         "priority": 6, "permission": "none", "ig_handle": "ig_mortal"}
+    {
+      "name": "CarryMinati",
+      "channel": "https://www.youtube.com/@CarryisLive",
+      "priority": 1,
+      "permission": "none",
+      "ig_handle": "carryminati"
+    },
+    {
+      "name": "Techno Gamerz",
+      "channel": "https://www.youtube.com/@TechnoGamerz",
+      "priority": 2,
+      "permission": "none",
+      "ig_handle": "ujjwal_technogamerz"
+    },
+    {
+      "name": "Triggered Insaan",
+      "channel": "https://www.youtube.com/@liveinsaan",
+      "priority": 3,
+      "permission": "none",
+      "ig_handle": "triggeredinsaan"
+    },
+    {
+      "name": "Mythpat",
+      "channel": "https://www.youtube.com/@Mythpat",
+      "priority": 4,
+      "permission": "none",
+      "ig_handle": "mythpat"
+    },
+    {
+      "name": "Scout",
+      "channel": "https://www.youtube.com/@officialscoutop",
+      "priority": 5,
+      "permission": "none",
+      "ig_handle": "scoutop"
+    },
+    {
+      "name": "Mortal",
+      "channel": "https://www.youtube.com/@MortaLyt",
+      "priority": 6,
+      "permission": "none",
+      "ig_handle": "ig_mortal"
+    }
   ],
-
   "default_streamer": {
     "permission": "none",
     "layout": {
-      "gameplay": {"x": 0.0, "y": 0.0, "w": 1.0, "h": 1.0, "focus_x": 0.5},
+      "gameplay": {
+        "x": 0.0,
+        "y": 0.0,
+        "w": 1.0,
+        "h": 1.0,
+        "focus_x": 0.5
+      },
       "facecam": "auto"
     }
   },
-
   "analysis": {
     "window_seconds": 35,
     "min_gap_seconds": 60,
@@ -39,14 +86,54 @@
     "candidates_to_claude": 15,
     "use_live_chat": true,
     "keywords": {
-      "scream":   ["what the", "oh my god", "omg", "bhai", "arey", "abe", "kya", "nahi", "noooo", "bro"],
-      "laugh":    ["haha", "hahaha", "lol", "lmao", "hehe"],
-      "police":   ["police", "cops", "wanted", "chase", "siren"],
-      "chaos":    ["explosion", "blast", "crash", "boom", "bug", "glitch", "fail", "mission failed", "wasted", "busted"],
-      "rage":     ["gussa", "rage", "kya bakwas", "bakwas", "chal", "ruk"]
+      "scream": [
+        "what the",
+        "oh my god",
+        "omg",
+        "bhai",
+        "arey",
+        "abe",
+        "kya",
+        "nahi",
+        "noooo",
+        "bro"
+      ],
+      "laugh": [
+        "haha",
+        "hahaha",
+        "lol",
+        "lmao",
+        "hehe"
+      ],
+      "police": [
+        "police",
+        "cops",
+        "wanted",
+        "chase",
+        "siren"
+      ],
+      "chaos": [
+        "explosion",
+        "blast",
+        "crash",
+        "boom",
+        "bug",
+        "glitch",
+        "fail",
+        "mission failed",
+        "wasted",
+        "busted"
+      ],
+      "rage": [
+        "gussa",
+        "rage",
+        "kya bakwas",
+        "bakwas",
+        "chal",
+        "ruk"
+      ]
     }
   },
-
   "whisper": {
     "backend": "faster-whisper",
     "model": "small",
@@ -54,7 +141,6 @@
     "device": "auto",
     "compute_type": "int8"
   },
-
   "render": {
     "width": 1080,
     "height": 1920,
@@ -71,20 +157,23 @@
     "subtitle_words_per_line": 3,
     "credit_text": "{streamer} LIVE"
   },
-
   "captions": {
     "language": "Hinglish",
-    "base_hashtags": ["#GTA6", "#GTAVI", "#Gaming", "#IndianGaming", "#Reels"],
+    "base_hashtags": [
+      "#GTA6",
+      "#GTAVI",
+      "#Gaming",
+      "#IndianGaming",
+      "#Reels"
+    ],
     "max_hashtags": 12
   },
-
   "claude": {
     "enabled": true,
     "model": "claude-opus-5-5",
     "effort": "medium",
     "max_tokens": 16000
   },
-
   "instagram": {
     "enabled": false,
     "require_permission": true,

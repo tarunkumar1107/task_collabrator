@@ -33,7 +33,7 @@ def fetch_audio(cfg: dict, stream: dict) -> Path:
     out = work_path(cfg, "audio", f"{stream['video_id']}.m4a")
     if not out.exists():
         log.info("downloading audio for %s", stream["video_id"])
-        run(["yt-dlp", "--no-warnings", "-f", "bestaudio[ext=m4a]/bestaudio", "-o", str(out), stream["url"]],
+        run(["yt-dlp", "--no-warnings", *cfg["search"].get("ytdlp_args", []), "-f", "bestaudio[ext=m4a]/bestaudio", "-o", str(out), stream["url"]],
             timeout=3 * 3600)
     return out
 
@@ -46,7 +46,7 @@ def fetch_chat(cfg: dict, stream: dict) -> Path | None:
     if hits:
         return Path(hits[0])
     try:
-        run(["yt-dlp", "--no-warnings", "--skip-download", "--write-subs", "--sub-langs", "live_chat",
+        run(["yt-dlp", "--no-warnings", *cfg["search"].get("ytdlp_args", []), "--skip-download", "--write-subs", "--sub-langs", "live_chat",
              "-o", str(base), stream["url"]], timeout=3600)
     except Exception as e:
         log.info("no chat replay: %s", str(e).splitlines()[0])

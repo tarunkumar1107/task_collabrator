@@ -17,8 +17,11 @@ from common import db, load_config, log, run
 log = log.getChild("trend")
 
 
+YTDLP_ARGS: list[str] = []  # extra yt-dlp args from config (e.g. ["--cookies", "cookies.txt"])
+
+
 def _yt_json(args: list[str], timeout: float = 180) -> list[dict]:
-    p = run(["yt-dlp", "--no-warnings", "--skip-download", "-J", *args], timeout=timeout)
+    p = run(["yt-dlp", "--no-warnings", "--skip-download", "-J", *YTDLP_ARGS, *args], timeout=timeout)
     data = json.loads(p.stdout or "{}")
     return data.get("entries") or ([data] if data.get("id") else [])
 
@@ -51,6 +54,7 @@ def _candidates(cfg: dict) -> list[tuple[str, dict]]:
                 continue
             for e in entries:
                 if _matches(e.get("title", ""), s_cfg["keywords"]):
+                    e["_tab"] = tab
                     found.append((st["name"], e))
     for q in s_cfg.get("extra_queries", []):
         try:
@@ -69,6 +73,7 @@ def _candidates(cfg: dict) -> list[tuple[str, dict]]:
 
 def find_streams(cfg: dict | None = None) -> int:
     cfg = cfg or load_config()
+    YTDLP_ARGS[:] = cfg["search"].get("ytdlp_args", [])
     conn = db(cfg)
     s_cfg = cfg["search"]
     new = 0
@@ -83,9 +88,13 @@ def find_streams(cfg: dict | None = None) -> int:
             continue  # already known & final
         info = _details(vid)
         if not info:
-            continue
+            # video page refused (e.g. YouTube's bot check on server IPs): fall back to playlist metadata
+            if not entry.get("duration"):
+                continue
+            info = {**entry, "webpage_url": entry.get("url") or f"https://www.youtube.com/watch?v={vid}"}
         dur = float(info.get("duration") or 0)
-        live = info.get("live_status") or ("is_live" if info.get("is_live") else "not_live")
+        live = info.get("live_status") or ("is_live" if info.get("is_live") else
+                                           "was_live" if entry.get("_tab") == "streams" else "not_live")
         if live != "is_live" and not (s_cfg["min_duration_minutes"] * 60 <= dur <= s_cfg["max_duration_hours"] * 3600):
             continue
         viewers = info.get("concurrent_view_count") or info.get("view_count") or 0
