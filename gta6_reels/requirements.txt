@@ -1,0 +1,8 @@
+yt-dlp>=2026.11.0
+faster-whisper>=1.1      # or: openai-whisper
+anthropic>=2.14
+numpy>=1.26
+pydantic>=2.7
+requests>=2.31
+opencv-python-headless>=4.9   # facecam auto-detection
+# system: ffmpeg (with libass + libfreetype), fontconfig
